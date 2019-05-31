@@ -1,7 +1,9 @@
-const utils = require('./utils');
+const tools = require('./tools');
 
 test('user should Register fine', (done ) => {
   let userAmmo = 0;
+
+  const utils = tools.utils(tools.users.newUser);
 
   // get current amount of user registers
   utils.getUsers()
@@ -18,31 +20,29 @@ test('user should Register fine', (done ) => {
 });
 
 test('user should Login fine', (done ) => {
-  utils.makeRequest({
-    url: '/login',
-  })
+  const utils = tools.utils(tools.users.newUser);
+
+  utils.login()
   .then(r => {
-      console.log(r);
       expect(r).not.toBe(null);
       done();
-    });
+    })
+  .catch(err => console.log(err));
 });
 
 test('user should Delete fine', (done ) => {
   let userAmmo = 0;
+  let newUserId = null;
+  const utils = tools.utils(tools.users.newUser);
+
   utils.getUsers()
   // get register users amount
   .then(users => {
     userAmmo = users.length;
-    return users[users.length -1];
+    newUserId = users.find(u => u.username == tools.users.newUser.username).id;
   })
   // delete last user created
-  .then((lastUser) => {
-    return utils.makeRequest({
-      url: `/customers/${lastUser.id}`,
-      method: "delete",
-    });
-  })
+  .then(() => utils.deleteUser(newUserId))
   .then(() => utils.getUsers())
   // get user created amount
   .then(users => {
