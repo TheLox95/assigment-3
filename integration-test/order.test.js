@@ -16,9 +16,16 @@ const cardData = {
 test('should process checkout', (done ) => {
   let ordersAmmo = null;
 
-  const utils = tools.utils(tools.users.defaultUser1);
+  const username = `Eve${Math.random().toString(36).substring(7)}`;
+  const u = {
+    username: username,
+    password: "pa$$",
+    email: `username@hotmail.com`,
+  };
 
-  utils.getUsers()
+  const utils = tools.utils(u);
+
+  utils.registerUser()
   .then(() => utils.login())
   .then(() => utils.getOrders())
   .then(orders => ordersAmmo = orders.length)
@@ -67,15 +74,16 @@ test('should process checkout', (done ) => {
 
 
 test('should fail when user has no card saved', (done ) => {
+  const username = `Eve${Math.random().toString(36).substring(7)}`;
   const u = {
-    username: "Eve881",
-    password: "eve",
+    username: username,
+    password: "pa$$",
+    email: `username@hotmail.com`,
   };
 
   const utils = tools.utils(u)
 
-  utils.getUsers()
-  .then((a) => utils.registerUser())
+  utils.registerUser()
   .then(() => utils.login())
   .then(() => utils.makeRequest({ url: '/catalogue'}))
   .then(res => res.data[0])
@@ -113,15 +121,16 @@ test('should fail when user has no card saved', (done ) => {
 
 
 test('should fail when user has no address saved', (done ) => {
+  const username = `Eve${Math.random().toString(36).substring(7)}`;
   const u = {
-    username: "Eve331",
-    password: "eve",
+    username: username,
+    password: "pa$$",
+    email: `username@hotmail.com`,
   };
 
   const utils = tools.utils(u)
 
-  utils.getUsers()
-  .then(() => utils.registerUser())
+  utils.registerUser()
   .then(() => utils.login())
   .then(() => utils.makeRequest({ url: '/catalogue'}))
   .then(res => res.data[0])
@@ -158,15 +167,16 @@ test('should fail when user has no address saved', (done ) => {
 });
 
 test('should fail when user has no items on cart', (done ) => {
+  const username = `Eve${Math.random().toString(36).substring(7)}`;
   const u = {
-    username: "Eve451",
-    password: "eve",
+    username: username,
+    password: "pa$$",
+    email: `username@hotmail.com`,
   };
 
   const utils = tools.utils(u)
 
-  utils.getUsers()
-  .then((a) => utils.registerUser())
+  utils.registerUser()
   .then(() => utils.login())
   .then(() => {
     return utils.makeRequest({
