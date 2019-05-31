@@ -1,6 +1,16 @@
 version: '2'
 
 services:
+  integration-test:
+    build: ./../../integration-test
+    hostname: integration-test
+    image: integration-test:0.1
+    environment:
+     - HOST_URL=edge-router
+    ports:
+      - '9090:9090'
+    links: 
+      - edge-router
   front-end:
     image: weaveworksdemos/front-end:0.3.12
     hostname: front-end
