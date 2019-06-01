@@ -1,5 +1,11 @@
 const tools = require('./tools');
 
+jest.setTimeout(30000);
+afterAll(() => {
+  const t = tools.utils(tools.users.defaultUser1);
+  return t.clearDb();
+});
+
 test('user should Register fine', (done ) => {
   let userAmmo = 0;
 

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "jest",
-    "start:win": "set HOST_URL=localhost&& jest"
+    "start": "jest --runInBand",
+    "start:win": "set HOST_URL=localhost&& jest --runInBand"
   },
   "author": "",
   "license": "ISC",

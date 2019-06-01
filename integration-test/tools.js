@@ -11,7 +11,22 @@ const users = {
   defaultUser1: {
     username: "Eve_Berger",
     password: "eve",
-    id: "57a98d98e4b00679b4a830af",
+  },
+  defaultUser2: {
+    username: "Eve_Lang",
+    password: "pas$$",
+  },
+  defaultUser3: {
+    username: "Eve_Start",
+    password: "pas$$",
+  },
+  defaultUser4: {
+    username: "Eve_Rogers",
+    password: "pas$$",
+  },
+  defaultUser5: {
+    username: "Eve_Romanov",
+    password: "pas$$",
   },
 }
 
@@ -26,17 +41,18 @@ function utils(userGlobal) {
         method: "delete",
       });
     },
-    registerUser: () => {
+    registerUser: (usr) => {
+      const userToRegister = usr || userGlobal;
       const config = {
         url: `/register`,
         method: 'POST',
         noAuth: true,
         data: {
-          username: userGlobal.username,
-          password: userGlobal.password,
-          email: userGlobal.email,
-          firstName: userGlobal.firstName,
-          lastName: userGlobal.lastName
+          username: userToRegister.username,
+          password: userToRegister.password,
+          email: userToRegister.email,
+          firstName: userToRegister.firstName,
+          lastName: userToRegister.lastName
         },
       };
       return u.makeRequest(config);
@@ -101,6 +117,24 @@ function utils(userGlobal) {
         method: 'delete',
       })
     },
+
+    clearDb: () => {
+      return u.getUsers()
+      .then(users => {
+        return Promise.all(users.map(usr => u.deleteUser(usr.id)))
+      })
+      .then(() => {
+        return Promise.all([
+          u.registerUser({username: 'user', password: "password"}),
+          u.registerUser({username: 'user1', password: "password"}),
+          u.registerUser(users.defaultUser1),
+          u.registerUser(users.defaultUser2),
+          u.registerUser(users.defaultUser3),
+          u.registerUser(users.defaultUser4),
+          u.registerUser(users.defaultUser5),
+        ]);
+      })
+    }
   }
   return u;
 }

@@ -13,6 +13,12 @@ const cardData = {
   ccv: "659",
 };
 
+jest.setTimeout(30000);
+afterAll(() => {
+  const t = tools.utils(tools.users.defaultUser1);
+  return t.clearDb();
+});
+
 test('should process checkout', (done ) => {
   let ordersAmmo = null;
 
@@ -66,7 +72,7 @@ test('should process checkout', (done ) => {
   })
   .then(() => utils.getOrders())
   .then(orders => {
-    expect(orders.length).toBe(ordersAmmo + 1);    
+    expect(orders.length).toBe(ordersAmmo + 1);
     done();
   })
   .catch(err => console.log(err));
@@ -74,17 +80,10 @@ test('should process checkout', (done ) => {
 
 
 test('should fail when user has no card saved', (done ) => {
-  const username = `Eve${Math.random().toString(36).substring(7)}`;
-  const u = {
-    username: username,
-    password: "pa$$",
-    email: `username@hotmail.com`,
-  };
 
-  const utils = tools.utils(u)
+  const utils = tools.utils(tools.users.defaultUser2)
 
-  utils.registerUser()
-  .then(() => utils.login())
+  utils.login()
   .then(() => utils.makeRequest({ url: '/catalogue'}))
   .then(res => res.data[0])
   .then((product) => {
@@ -113,25 +112,17 @@ test('should fail when user has no card saved', (done ) => {
     })
   })
   .catch(err => {
-    expect(err.response.status).toBe(406);    
-    expect(err.response.data.message).toBe('Invalid order request. Order requires customer, address, card and items.');    
+    expect(err.response.status).toBe(406);
+    expect(err.response.data.message).toBe('Invalid order request. Order requires customer, address, card and items.');
     done()
   });
 });
 
 
 test('should fail when user has no address saved', (done ) => {
-  const username = `Eve${Math.random().toString(36).substring(7)}`;
-  const u = {
-    username: username,
-    password: "pa$$",
-    email: `username@hotmail.com`,
-  };
+  const utils = tools.utils(tools.users.defaultUser3)
 
-  const utils = tools.utils(u)
-
-  utils.registerUser()
-  .then(() => utils.login())
+  utils.login()
   .then(() => utils.makeRequest({ url: '/catalogue'}))
   .then(res => res.data[0])
   .then((product) => {
@@ -160,24 +151,16 @@ test('should fail when user has no address saved', (done ) => {
     })
   })
   .catch(err => {
-    expect(err.response.status).toBe(406);    
-    expect(err.response.data.message).toBe('Invalid order request. Order requires customer, address, card and items.');    
+    expect(err.response.status).toBe(406);
+    expect(err.response.data.message).toBe('Invalid order request. Order requires customer, address, card and items.');
     done()
   });
 });
 
 test('should fail when user has no items on cart', (done ) => {
-  const username = `Eve${Math.random().toString(36).substring(7)}`;
-  const u = {
-    username: username,
-    password: "pa$$",
-    email: `username@hotmail.com`,
-  };
+  const utils = tools.utils(tools.users.defaultUser4)
 
-  const utils = tools.utils(u)
-
-  utils.registerUser()
-  .then(() => utils.login())
+  utils.login()
   .then(() => {
     return utils.makeRequest({
       url: '/cards',
@@ -195,8 +178,8 @@ test('should fail when user has no items on cart', (done ) => {
     })
   })
   .catch(err => {
-    expect(err.response.status).toBe(406);    
-    expect(err.response.data.message).toBe('Invalid order request. Order requires customer, address, card and items.');    
+    expect(err.response.status).toBe(406);
+    expect(err.response.data.message).toBe('Invalid order request. Order requires customer, address, card and items.');
     done()
   });
 });
